@@ -4,7 +4,7 @@ Dockerized builder for Raspberry Pi firmware (armhf) to be used with Raspbian Bu
 
 ## Usage
 
-Docker build and run commands to create debian package and copy to local artifact directory.
+Use `docker build` on the hardware where the firmware will be used. Example usage of `docker run` to export the tar archive and deploy elsewhere.
 
 ### Compile and build firmware image and tar
 
