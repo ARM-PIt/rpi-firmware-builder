@@ -1,4 +1,4 @@
-FROM armpits/raspbian-buster-lite-armhf
+FROM debian:10-slim
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
@@ -31,18 +31,20 @@ RUN mkdir -p /usr/share/man/man1 && \
 
 ARG PREFIX=/usr/local
 ARG TMPDIR=/rpi-firmware-src
+ARG USERLAND_GIT_COMMIT=7d3c6b9
 
 RUN export KERNEL_VERSION="$(uname -r)" && \
     mkdir "${TMPDIR}" && \
     rm -rf /opt/vc /lib/modules && \
     mkdir -p /opt/vc /lib/modules && \
-    git clone --depth=1 https://github.com/raspberrypi/userland ${TMPDIR}/userland && \
-    cp -a "${TMPDIR}"/userland/interface/* "${PREFIX}"/include/ && \
+    git clone https://github.com/raspberrypi/userland ${TMPDIR}/userland && \
     cd ${TMPDIR}/userland && \
+    git checkout "${USERLAND_GIT_COMMIT}" && \
+    cp -a "${TMPDIR}"/userland/interface/* "${PREFIX}"/include/ && \
     sed -i -e 's/sudo//g' ${TMPDIR}/userland/buildme && \
-    bash buildme && \
+    bash buildme --aarch64 && \
     rm -rf ${TMPDIR} && \
-    tar --numeric-owner -zcvf /rpi-firmware-${KERNEL_VERSION}-armv7.tar.xz -C /opt/vc . && \
+    tar --numeric-owner -zcvf /rpi-firmware-${KERNEL_VERSION}-"$(uname -m)".tar.xz -C /opt/vc . && \
     echo "/opt/vc/lib" > /etc/ld.so.conf.d/00-vmcs.conf && \
     ln -sf /opt/vc/bin/vcgencmd /usr/bin/vcgencmd && \
     ldconfig
