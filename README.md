@@ -9,7 +9,7 @@ Use `docker build` on the hardware where the firmware will be used. Example usag
 ### Compile and build firmware image and tar
 
 ```
-docker build -t armpits/rpi-firmware-bulder:latest .
+docker build -t armpits/rpi-firmware-builder:latest .
 ```
 
 ### Export tar
@@ -18,7 +18,7 @@ docker build -t armpits/rpi-firmware-bulder:latest .
 mkdir $(pwd)/tmp
 docker run \
   -v "$(pwd)"/tmp:/tmp \
-  -it armpits/rpi-firmware-bulder:latest \
+  -it armpits/rpi-firmware-builder:latest \
   /bin/bash -c "/bin/cp /*.tar.xz /tmp/"
 ```
 
